@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--press 상태에 따라 자동으로 보여줄 그림 선택-->
+    <item android:drawable="@drawable/bg_btn_nonpress" android:state_pressed="false"/>
+    <item android:drawable="@drawable/bg_btn_press" android:state_pressed="true"/>
+
+</selector>
