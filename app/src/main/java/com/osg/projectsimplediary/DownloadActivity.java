@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.MenuInflater;
 import android.widget.TextView;
 
 import java.util.ArrayList;

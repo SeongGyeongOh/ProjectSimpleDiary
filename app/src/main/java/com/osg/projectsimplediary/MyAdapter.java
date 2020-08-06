@@ -1,10 +1,9 @@
 package com.osg.projectsimplediary;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,21 +14,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
-import static com.osg.projectsimplediary.G.nums;
 
 public class MyAdapter extends RecyclerView.Adapter {
     Context context;
     ArrayList<MemoItem> items;
     final MenuInflater inflater;
 
-    String tablename="memo";
-    String dbName="simpleMemo.db";
-    SQLiteDatabase db;
 
     public MyAdapter(Context context, ArrayList<MemoItem> items, MenuInflater inflater) {
         this.context = context;
@@ -72,7 +64,18 @@ public class MyAdapter extends RecyclerView.Adapter {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             text = itemView.findViewById(R.id.text);
-//            num=itemView.get
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent=new Intent(context, EditActivity.class);
+                    intent.putExtra("title", title.getText().toString());
+                    intent.putExtra("text", text.getText().toString());
+                    intent.putExtra("num", items.get(getAdapterPosition()).no);
+                    context.startActivity(intent);
+                    ((Activity)context).finish();
+                }
+            });
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -85,7 +88,7 @@ public class MyAdapter extends RecyclerView.Adapter {
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getTitle().toString()){
                                 case "delete":
-                                    //SQLiteopener?같은 헬퍼클래스를 만드는 방법 검색해서 적용하기
+                                    //SQLiteOpeneHelper 헬퍼클래스를 만드는 방법 적용하기
                                     DBHelper helper=new DBHelper(context);
                                     SQLiteDatabase db=helper.getWritableDatabase();
                                     db.execSQL("DELETE FROM tb_memo WHERE num="+items.get(getAdapterPosition()).no);
@@ -93,7 +96,6 @@ public class MyAdapter extends RecyclerView.Adapter {
                                     notifyItemRemoved(getAdapterPosition());
 
                                     break;
-
                             }
                             return true;
                         }
