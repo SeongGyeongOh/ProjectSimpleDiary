@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 
@@ -38,4 +39,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DownloadActivity.class);
         startActivityForResult(intent, 20);
     }
+
 }

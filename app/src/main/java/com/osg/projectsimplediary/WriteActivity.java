@@ -23,6 +23,7 @@ public class WriteActivity extends AppCompatActivity {
     String dbName = "simpleMemo.db";
     String tableName = "memo";
     InputMethodManager imm;
+    String KEY_ID="num";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +43,9 @@ public class WriteActivity extends AppCompatActivity {
 
         editTextNum();
 
-        db = openOrCreateDatabase(dbName, MODE_PRIVATE, null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS " +tableName+"(num integer primary key autoincrement, title text, text text not null)");
+//        db = openOrCreateDatabase(dbName, MODE_PRIVATE, null);
+
+//        db.execSQL("CREATE TABLE IF NOT EXISTS " +tableName+"(num integer primary key autoincrement, title text, text text not null)");
     }
 
 
@@ -53,24 +55,26 @@ public class WriteActivity extends AppCompatActivity {
         finish();
     }
 
+    //DB에 메모 저장!
     public void clickBtnOk(View view) {
         String title = etTitle.getText().toString();
         String text = etText.getText().toString();
+
+        DBHelper helper=new DBHelper(this);
+        SQLiteDatabase db=helper.getWritableDatabase();
 
         if(text.length()==0) {
             Intent intent = new Intent();
             setResult(RESULT_CANCELED, intent);
             finish();
         } else{
-            db.execSQL("INSERT INTO "+tableName+"(title, text) VALUES('"+title+"', '"+text+"')");
+            db.execSQL("INSERT INTO tb_memo (title, text) VALUES (?,?)", new String[]{title, text});
             Intent intent = new Intent();
             setResult(RESULT_OK, intent);
             finish();
         }
 
     }
-
-
 
 
 
@@ -91,5 +95,6 @@ public class WriteActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(etText.getWindowToken(),0);
         imm.hideSoftInputFromWindow(etTitle.getWindowToken(),0);
     }
+
 }
 

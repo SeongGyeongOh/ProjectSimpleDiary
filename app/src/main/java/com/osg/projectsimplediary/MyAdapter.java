@@ -2,6 +2,8 @@ package com.osg.projectsimplediary;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -14,9 +16,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
+import static com.osg.projectsimplediary.G.nums;
 
 public class MyAdapter extends RecyclerView.Adapter {
     Context context;
@@ -63,15 +67,12 @@ public class MyAdapter extends RecyclerView.Adapter {
 
     class VH extends RecyclerView.ViewHolder{
         TextView title, text;
-
+        int num;
         public VH(@NonNull final View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             text = itemView.findViewById(R.id.text);
-
-//            int no=getLayoutPosition();
-
-//            db=openOrCreateDatabase(dbName,null);
+//            num=itemView.get
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -84,11 +85,15 @@ public class MyAdapter extends RecyclerView.Adapter {
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getTitle().toString()){
                                 case "delete":
+                                    //SQLiteopener?같은 헬퍼클래스를 만드는 방법 검색해서 적용하기
+                                    DBHelper helper=new DBHelper(context);
+                                    SQLiteDatabase db=helper.getWritableDatabase();
+                                    db.execSQL("DELETE FROM tb_memo WHERE num="+items.get(getAdapterPosition()).no);
                                     items.remove(getAdapterPosition());
                                     notifyItemRemoved(getAdapterPosition());
 
-                                    //SQLiteopener?같은 헬퍼클래스를 만드는 방법 검색해서 적용하기
                                     break;
+
                             }
                             return true;
                         }

@@ -43,32 +43,22 @@ public class DownloadActivity extends AppCompatActivity {
     }
 
     void dbLoad(){
-        db = openOrCreateDatabase(dbName, MODE_PRIVATE, null);
+        DBHelper helper=new DBHelper(this);
+        SQLiteDatabase db=helper.getWritableDatabase();
 
-        db.execSQL("CREATE TABLE IF NOT EXISTS " +tableName+"(num integer primary key autoincrement, title text, text text not null)");
-
-        Cursor cursor = db.rawQuery("SELECT * FROM "+tableName, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM tb_memo", null);
         if (cursor!=null){
             if(cursor.moveToFirst()){
                 do{
+                    int num=cursor.getInt(0);
                     String title = cursor.getString(cursor.getColumnIndex("title"));
                     String text = cursor.getString(cursor.getColumnIndex("text"));
 
-                    item.add(0, new MemoItem(title, text));
-
+                    item.add(0, new MemoItem(num, title, text));
                 }while(cursor.moveToNext());
+
             }
         }
-
         db.close();
-
-//        StringBuffer buffer = new StringBuffer();
-//        while(cursor.moveToNext()){
-//            int num =cursor.getInt(0);
-//            String title= cursor.getString(1);
-//            String text = cursor.getString(2);
-//            buffer.append(num+"\n"+title+"\n"+text+"\n\n");
-//        }
-
     }
 }
